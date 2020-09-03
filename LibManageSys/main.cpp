@@ -9,12 +9,19 @@ using namespace std;
 
 void UserRegister();
 void UserLogin();
+int userManage();
 string getPassword();
 bool dupUsername(string name);
 
 User currentUser;
 
 int main()
+{
+    
+
+    return 0;
+}
+int userManage()
 {
     int order = -1;
     do
@@ -38,6 +45,7 @@ int main()
             UserLogin();
             break;
         case 0:
+            return 0;
             break;
         default:
             cout << "错误指令，请重新输入！按任意键返回主界面…" << endl;
@@ -46,10 +54,8 @@ int main()
             break;
         }
     } while (order != 0);
-
-    return 0;
+    return order;
 }
-
 void UserRegister()
 {
     int typeNumber=-1;
@@ -80,17 +86,39 @@ void UserRegister()
     cin >> username;
     do
     {
+        do
+        {
+            cout << "请输入注册用户类型，1代表普通用户，2代表管理员：";
+            cin >> typeNumber;
+            switch (typeNumber)
+            {
+            case 1:
+                type = user;
+                break;
+            case 2:
+                type = admin;
+                break;
+            default:
+                cout << "错误指令，请重新输入！" << endl;
+                break;
+            }
+        } while (typeNumber != 1 && typeNumber != 2);
+        cin.get();
+        cout << "姓名：";
+        getline(cin, realName);
+        cout << "用户名（登录时使用）：";
+        cin >> username;
         cout << "密码：";
         password = getPassword();
-        cout << endl << "确认你的密码：";
+        cout << "确认你的密码：";
         confirmPassword = getPassword();
         if (password.compare(confirmPassword) != 0)
         {
-            cout << endl << "前后密码不一致，请重新输入！" << endl;
+            cout << "前后密码不一致，请重新输入！" << endl;
         }
         else if (dupUsername(username))
         {
-            cout << endl << "当前用户名已存在，请重新输入！" << endl;
+            cout << "当前用户名已存在，请重新输入！" << endl;
         }
         else
         {
@@ -119,12 +147,12 @@ void UserLogin()
         userType loginType = loginUser.getType();
         if (loginType == undefined)
         {//登陆失败
-            cout << endl << "用户名或密码错误，请重新输入！" << endl;
+            cout << "用户名或密码错误，请重新输入！" << endl;
         }
         else
         {//登陆成功
             cin.get();
-            cout << endl << "登陆成功！按任意键进入系统…" << endl;
+            cout << "登陆成功！按任意键进入系统…" << endl;
             logined = true;
             cin.get();
             system("cls");
@@ -143,7 +171,7 @@ string getPassword()
         ret += ch;
         ch = _getch();
     }
-
+    cout << endl;
     return ret;
 }
 
