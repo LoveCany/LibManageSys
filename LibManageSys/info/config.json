@@ -1,0 +1,6 @@
+{
+    "maxBorrowTime": 30,
+    "renewTime": 30,
+    "delayFineRatio": 10,
+    "lostFineRatio": 3
+}

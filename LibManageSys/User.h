@@ -1,9 +1,12 @@
 #include <string>
+#include <vector>
 
 using std::string;
+using std::vector;
 
-enum userType {user = 1,
-	admin = 2,
+enum userType {
+	user = 1,//普通用户，可以借书/还书/申请续期/缴纳滞纳金/荐购/查看个人统计
+	admin = 2,//管理员，可以进行采购/申请报废/修改单次借书时长/修改滞纳金金额/查看全体统计
 	undefined = -1
 };
 

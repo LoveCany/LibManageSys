@@ -21,10 +21,36 @@
     <ClCompile Include="User.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="book.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="borrowInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="analysis.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="User.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="book.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="borrowInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LibManageSys.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

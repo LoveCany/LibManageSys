@@ -78,7 +78,7 @@ User::User(string username,string passwordMD5)
 		
 		if (Json::parseFromStream(rbuilder, in, &root, &errs))
 		{
-			if (root["passwordMD5"].asString().compare(passwordMD5)!=0)
+			if (!verifyPassword(root["passwordMD5"].asString()))
 			{//√‹¬Î¥ÌŒÛ
 				username = "";
 				realName = "";
@@ -105,6 +105,7 @@ User::User(string username,string passwordMD5)
 			}
 		}
 	}
+	in.close();
 }
 
 bool User::verifyPassword(string pw)

@@ -2,25 +2,42 @@
 #include <vector>
 #include <cstdlib>
 #include "User.h"
+#include "config.h"
 #include <conio.h>
 #include <io.h>
+#include <json/json.h>
 
 using namespace std;
 
 void UserRegister();
 void UserLogin();
 int userManage();
-string getPassword();
 bool dupUsername(string name);
 
 User currentUser;
 
 int main()
 {
-    
+    loadConfig();
+    int user = userManage();
 
+    int cmd = -1;
+    if (user!=0)
+    {
+        do
+        {
+            if (user == 1) {
+                cmd = userMenu();
+            }
+            else
+            {
+                cmd = adminMenu();
+            }
+        } while (cmd!=0);
+    }
     return 0;
 }
+
 int userManage()
 {
     int order = -1;
@@ -39,10 +56,12 @@ int userManage()
         case 1:
             system("cls");
             UserRegister();
+            return 1;
             break;
         case 2:
             system("cls");
             UserLogin();
+            return 1;
             break;
         case 0:
             return 0;
@@ -53,9 +72,106 @@ int userManage()
             system("cls");
             break;
         }
-    } while (order != 0);
-    return order;
+    } while (true);
+    return 0;
 }
+
+int adminMenu()
+{
+    int order = -1;
+    do
+    {
+        cout << endl;
+        cout << "1. 采购图书" << endl;
+        cout << "2. 报废图书" << endl;
+        cout << "3. 查看荐购" << endl;
+        cout << "4. 系统设置" << endl;
+        cout << "5. 统计" << endl;
+        cout << "0. 退出系统" << endl;
+        cout << endl;
+        cout << "请输入对应序号进行相应操作: ";
+        cin >> order;
+
+        switch (order)
+        {
+        case 1:
+            system("cls");
+            UserRegister();
+            break;
+        case 2:
+            system("cls");
+            UserLogin();
+            break;
+        case 3:
+
+            break;
+        case 4:
+
+            break;
+        case 5:
+
+            break;
+        case 0:
+            return 0;
+            break;
+        default:
+            cout << "错误指令，请重新输入！按任意键返回主界面…" << endl;
+            cin.get();
+            system("cls");
+            break;
+        }
+    } while (true);
+    return 0;
+}
+
+int userMenu()
+{
+    int order = -1;
+    do
+    {
+        cout << endl;
+        cout << "1. 借书" << endl;
+        cout << "2. 还书" << endl;
+        cout << "3. 申请续期" << endl;
+        cout << "4. 荐购" << endl;
+        cout << "5. 统计" << endl;
+        cout << "0. 退出系统" << endl;
+        cout << endl;
+        cout << "请输入对应序号进行相应操作: ";
+        cin >> order;
+
+        switch (order)
+        {
+        case 1:
+            system("cls");
+            UserRegister();
+            break;
+        case 2:
+            system("cls");
+            UserLogin();
+            break;
+        case 3:
+
+            break;
+        case 4:
+
+            break;
+        case 5:
+
+            break;
+        case 0:
+            return 0;
+            break;
+        default:
+            cout << "错误指令，请重新输入！按任意键返回主界面…" << endl;
+            cin.get();
+            system("cls");
+            break;
+        }
+    } while (true);
+    return 0;
+}
+
 void UserRegister()
 {
     int typeNumber=-1;

@@ -148,11 +148,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="analysis.cpp" />
+    <ClCompile Include="book.cpp" />
+    <ClCompile Include="borrowInfo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="book.h" />
+    <ClInclude Include="borrowInfo.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="User.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LibManageSys.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
