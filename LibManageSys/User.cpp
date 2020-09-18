@@ -138,6 +138,16 @@ bool User::modifyPassword(string pw)
 	}
 }
 
+list<int> User::borrowingInfo()
+{
+	return borrowing;
+}
+
+list<int> User::returnedInfo()
+{
+	return returned;
+}
+
 userType User::getType()
 {
 	return type;

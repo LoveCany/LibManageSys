@@ -6,6 +6,8 @@ using std::string;
 
 //该header只需要在需要加载全局设置的文件中引用即可
 
+//设置储存在"info\config.json"文件中，除在程序中修改外也可直接修改配置json文件完成修改操作
+
 struct Config
 {
 	int maxBorrowTime;//单次借阅最长可借时间（不包含续借）
