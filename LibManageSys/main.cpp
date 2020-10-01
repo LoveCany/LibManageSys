@@ -79,6 +79,8 @@ int userManage()
 int adminMenu()
 {
     int order = -1;
+    string bookID;
+    book se;
     do
     {
         cout << endl;
@@ -96,11 +98,17 @@ int adminMenu()
         {
         case 1:
             system("cls");
-            UserRegister();
+            addBook();
             break;
         case 2:
             system("cls");
-            UserLogin();
+            cout << "请输入待报废图书bookID：";
+            cin >> bookID;
+            se = searchBookByID(bookID);
+            if (se.bookID==bookID)
+            {
+                se.deleteBook();
+            }
             break;
         case 3:
 
@@ -115,7 +123,7 @@ int adminMenu()
             return 0;
             break;
         default:
-            cout << "错误指令，请重新输入！按任意键返回主界面…" << endl;
+            cerr << "错误指令，请重新输入！按任意键返回主界面…" << endl;
             cin.get();
             system("cls");
             break;
@@ -163,7 +171,7 @@ int userMenu()
             return 0;
             break;
         default:
-            cout << "错误指令，请重新输入！按任意键返回主界面…" << endl;
+            cerr << "错误指令，请重新输入！按任意键返回主界面…" << endl;
             cin.get();
             system("cls");
             break;
@@ -191,7 +199,7 @@ void UserRegister()
             type = admin;
             break;
         default:
-            cout << "错误指令，请重新输入！" << endl;
+            cerr << "错误指令，请重新输入！" << endl;
             break;
         }
     } while (typeNumber!=1&&typeNumber!=2);
@@ -215,7 +223,7 @@ void UserRegister()
                 type = admin;
                 break;
             default:
-                cout << "错误指令，请重新输入！" << endl;
+                cerr << "错误指令，请重新输入！" << endl;
                 break;
             }
         } while (typeNumber != 1 && typeNumber != 2);
@@ -230,11 +238,11 @@ void UserRegister()
         confirmPassword = getPassword();
         if (password.compare(confirmPassword) != 0)
         {
-            cout << "前后密码不一致，请重新输入！" << endl;
+            cerr << "前后密码不一致，请重新输入！" << endl;
         }
         else if (dupUsername(username))
         {
-            cout << "当前用户名已存在，请重新输入！" << endl;
+            cerr << "当前用户名已存在，请重新输入！" << endl;
         }
         else
         {
