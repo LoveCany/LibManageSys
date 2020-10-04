@@ -12,13 +12,13 @@ Windows API: Windows 10 (Version 2004)
 
 1. Visual Studio 2019的安装
 
-   Visual Studio从2017以后的安装完全依赖于安装器Visual Studio Installer，在官网 (https://visualstudio.microsoft.com/zh-hans/vs/)下载并执行安装即可。由于我拥有MSDN订阅，故这里使用的是专业版，该Project使用社区版亦可完成开发和编译调试。
+   Visual Studio从2017以后的安装完全依赖于安装器Visual Studio Installer，在官网 ([https://visualstudio.microsoft.com/zh-hans/vs/](https://visualstudio.microsoft.com/zh-hans/vs/))下载并执行安装即可。由于我拥有MSDN订阅，故这里使用的是专业版，该Project使用社区版亦可完成开发和编译调试。
 
    启动安装器后，除必要依赖外，需额外安装C++相关组件以保证后续工作正常进行。
 
 2. vcpkg的安装
 
-   vcpkg目前托管在GitHub平台上 (仓库地址：https://github.com/microsoft/vcpkg)，按照安装文档中的说明完成安装，并集成在Visual Studio上的插件即可。
+   vcpkg目前托管在GitHub平台上 (仓库地址：[https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg))，按照安装文档中的说明完成安装，并集成在Visual Studio上的插件即可。
 
 3. 获取第三方库
 
