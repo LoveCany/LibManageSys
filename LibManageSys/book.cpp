@@ -12,7 +12,7 @@ using std::cout;
 bool addBook()
 {
 	string filename = "info\\books.json";
-	std::ifstream in(filename);
+	std::ifstream in(filename, std::ios::binary);
 	Json::Value root;
 	Json::CharReaderBuilder rbuilder;
 	rbuilder["collectComments"] = false;
@@ -22,44 +22,49 @@ bool addBook()
 	
 	string bookID, name, ISBN, writer_input, writer_tmp, press;
 	int price;
-	cout << "·ÖÅäbookID£º";
+	cout << "åˆ†é…bookIDï¼š";
 	cin >> bookID;
 	
-	list<string> writers;
-	std::stringstream input(writer_input);
-	while (std::getline(input, writer_tmp, ','))
-	{
-		writers.push_back(writer_tmp);
-	}
-	
-	//ĞèÒªÏÈÅĞ¶Ïµ±Ç°bookIDÊÇ·ñÒÑ±»·ÖÅä
+	//éœ€è¦å…ˆåˆ¤æ–­å½“å‰bookIDæ˜¯å¦å·²è¢«åˆ†é…
 	if (root.isMember(bookID))
 	{
-		std::cerr << "[ERROR]µ±Ç°bookIDÒÑ´æÔÚ£¬ÇëÖØĞÂ·ÖÅä£¡\n";
+		std::cerr << "[ERROR]å½“å‰bookIDå·²å­˜åœ¨ï¼Œè¯·é‡æ–°åˆ†é…ï¼\n";
 		return false;
 	}
 	else
 	{
-		cout << "ÊéÃû£º";
+		cout << "ä¹¦åï¼š";
 		cin >> name;
-		cout << "ISBN£º";
+		cout << "ISBNï¼š";
 		cin >> ISBN;
-		cout << "×÷Õß£¨¶à¸ö×÷ÕßÖ®¼äÇëÓÃÓ¢ÎÄ¶ººÅ·Ö¸ô£©£º";
+		cout << "ä½œè€…ï¼ˆå¤šä¸ªä½œè€…ä¹‹é—´è¯·ç”¨è‹±æ–‡é€—å·åˆ†éš”ï¼‰ï¼š";
 		cin >> writer_input;
-		cout << "±ê¼Û£¨ÒÔµ¥Î»ÎªÈËÃñ±Ò·ÖÊäÈë£©£º";
+		vector<string> writers;
+		std::stringstream input(writer_input);
+		while (std::getline(input, writer_tmp, ','))
+		{
+			writers.push_back(writer_tmp);
+		}
+		cout << "æ ‡ä»·ï¼ˆä»¥å•ä½ä¸ºäººæ°‘å¸åˆ†è¾“å…¥ï¼‰ï¼š";
 		cin >> price;
-		cout << "³ö°æÉç£º";
+		cout << "å‡ºç‰ˆç¤¾ï¼š";
 		cin >> press;
 		book newBook = book(bookID, name, ISBN, writers, press, price);
-		/*ÎªĞ´ÈëjsonÎÄ¼ş¶¨Òå±äÁ¿ÉùÃ÷³¤¶ÈµÄÊı×é£¬µ«ĞèÒª¼°Ê±delete±ÜÃâÄÚ´æĞ¹Â¶*/
-		string* writerArr = new string[writers.size()];
 		Json::Value cur = root[bookID];
-		cur["name"] = Json::Value(name);
-		cur["ISBN"] = Json::Value(ISBN);
-		cur["writer"] = Json::Value(writerArr);
-		cur["press"] = Json::Value(press);
-		cur["price"] = Json::Value(price);
-		cur["status"] = Json::Value((int)1);
+		root[bookID.c_str()]["name"] = Json::Value(name);
+		root[bookID.c_str()]["ISBN"] = Json::Value(ISBN);
+		for (int i = 0; i < writers.size(); i++)
+		{
+			root[bookID.c_str()]["writer"][i] = Json::Value(writers[i]);
+		}
+		root[bookID.c_str()]["press"] = Json::Value(press);
+		root[bookID.c_str()]["price"] = Json::Value(price);
+		root[bookID.c_str()]["bookStatus"] = Json::Value((int)1);
+		root[bookID.c_str()]["borrowedTime"] = Json::Value((int)0);
+
+		Json::StreamWriterBuilder wBuilder;
+		wBuilder.setDefaults(&root);
+		root["emitUTF8"] = true;
 		std::ofstream os;
 		os.open(filename, std::ios::out | std::ios::app);
 		if (!os.is_open())
@@ -68,10 +73,46 @@ bool addBook()
 		}
 		os << root;
 		os.close();
-		delete(writerArr);//¼°Ê±ÊÍ·ÅÄÚ´æ
 	}
 	return true;
 }
+
+void book::updateBookInfo()
+{
+	string filename = "info\\books.json";
+	std::ifstream in(filename, std::ios::binary);
+	Json::Value root;
+	Json::CharReaderBuilder rbuilder;
+	rbuilder["collectComments"] = false;
+	string errs;
+	Json::parseFromStream(rbuilder, in, &root, &errs);
+	in.close();
+	
+	for (int i = 0; i < writer.size(); i++)
+	{
+		root[bookID.c_str()]["writer"][i] = Json::Value(writer[i]);
+	}
+	Json::Value cur = root[bookID];
+	root[bookID.c_str()]["name"] = Json::Value(name);
+	root[bookID.c_str()]["ISBN"] = Json::Value(ISBN);
+	root[bookID.c_str()]["press"] = Json::Value(press);
+	root[bookID.c_str()]["price"] = Json::Value(price);
+	root[bookID.c_str()]["bookStatus"] = Json::Value(bookStatus);
+	root[bookID.c_str()]["borrowedTime"] = Json::Value(borrowedTime);
+	Json::StreamWriterBuilder wBuilder;
+	wBuilder.setDefaults(&root);
+	root["emitUTF8"] = true;
+
+	std::ofstream os;
+	os.open(filename, std::ios::out | std::ios::app);
+	if (!os.is_open())
+	{
+		std::cerr << "[ERROR]cannot create file \"" + filename + "\"." << std::endl;
+	}
+	os << root;
+	os.close();
+}
+
 
 book::book()
 {
@@ -80,10 +121,11 @@ book::book()
 	this->ISBN = "";
 	this->press = "";
 	this->price = 0;
-	this->status = invalid;
+	this->bookStatus = invalid;
+	this->borrowedTime = 0;
 }
 
-book::book(string bookID, string name, string ISBN, list<string> writer, string press, int price)
+book::book(string bookID, string name, string ISBN, vector<string> writer, string press, int price)
 {
 	this->bookID = bookID;
 	this->name = name;
@@ -91,10 +133,11 @@ book::book(string bookID, string name, string ISBN, list<string> writer, string 
 	this->writer = writer;
 	this->press = press;
 	this->price = price;
-	this->status = free;
+	this->bookStatus = available;
+	this->borrowedTime = 0;
 }
 
-book::book(string bookID, string name, string ISBN, list<string> writer, string press, int price, bookStatus status)
+book::book(string bookID, string name, string ISBN, vector<string> writer, string press, int price, int status, int borrowedTime)
 {
 	this->bookID = bookID;
 	this->name = name;
@@ -102,14 +145,16 @@ book::book(string bookID, string name, string ISBN, list<string> writer, string 
 	this->writer = writer;
 	this->press = press;
 	this->price = price;
-	this->status = status;
+	this->bookStatus = status;
+	this->borrowedTime = borrowedTime;
 }
 
 void book::deleteBook()
 {
-	//É¾³ı¼ÇÂ¼¶ÔÓÚ¹ÜÀíÀ´Ëµ²¢²»ÀûÓÚÎ¬»¤£¬ÕâÀïÖ»×ö¸ü¸Ä×´Ì¬´¦Àí
-	//Òò´ËÍ¼ÊéÏú»ÙºóbookID²¢²»ÊÍ·Å£¬ÔÚ×î³õ²É¹ºÍ¼Êé±ê¼ÇIDÊ±¹ÜÀíÔ±Ó¦µ±Áô³öÒ»¶¨ÈßÓà¸øºóĞø¹ºÈëµÄ¸´±¾
-	status = invalid;
+	//åˆ é™¤è®°å½•å¯¹äºç®¡ç†æ¥è¯´å¹¶ä¸åˆ©äºç»´æŠ¤ï¼Œè¿™é‡Œåªåšæ›´æ”¹çŠ¶æ€å¤„ç†
+	//å› æ­¤å›¾ä¹¦é”€æ¯åbookIDå¹¶ä¸é‡Šæ”¾ï¼Œåœ¨æœ€åˆé‡‡è´­å›¾ä¹¦æ ‡è®°IDæ—¶ç®¡ç†å‘˜åº”å½“ç•™å‡ºä¸€å®šå†—ä½™ç»™åç»­è´­å…¥çš„å¤æœ¬
+	bookStatus = invalid;
+	updateBookInfo();
 }
 
 void book::operator=(const book& B)
@@ -120,15 +165,16 @@ void book::operator=(const book& B)
 	writer = B.writer;
 	press = B.press;
 	price = B.price;
-	status = B.status;
+	bookStatus = B.bookStatus;
+	borrowedTime = B.borrowedTime;
 }
 
 book json2Book(Json::Value bookJSON, string bookID)
 {
 	string name, ISBN, press;
-	int price;
-	bookStatus status;
-	list<string> writers;
+	int price, borrowedTime;
+	int status;
+	vector<string> writers;
 	name=bookJSON["name"].asString();
 	ISBN=bookJSON["ISBN"].asString();
 	Json::Value writerArr=bookJSON["writer"];
@@ -138,11 +184,12 @@ book json2Book(Json::Value bookJSON, string bookID)
 	}
 	press=bookJSON["press"].asString();
 	price=bookJSON["price"].asInt();
-	status=(bookStatus)bookJSON["status"].asInt();
-	return book(bookID, name, ISBN, writers, press, price, status);
+	status=bookJSON["bookStatus"].asInt();
+	borrowedTime = bookJSON["borrowedTime"].asInt();
+	return book(bookID, name, ISBN, writers, press, price, status, borrowedTime);
 }
 
-list<book> searchBook(string word)
+vector<book> searchBook(string word)
 {
 	string filename = "info\\books.json";
 	std::ifstream in(filename);
@@ -153,7 +200,7 @@ list<book> searchBook(string word)
 	Json::parseFromStream(rbuilder, in, &root, &errs);
 	in.close();
 
-	list<book> result;
+	vector<book> result;
 	Json::Value::Members member = root.getMemberNames();
 	for (auto iter = member.begin(); iter != member.end(); iter++)
 	{
@@ -172,7 +219,7 @@ list<book> searchBook(string word)
 		}
 		else
 		{
-			for (list<string>::iterator it = cur.writer.begin(); it != cur.writer.end(); it++)
+			for (vector<string>::iterator it = cur.writer.begin(); it != cur.writer.end(); it++)
 			{
 				if (it->find(word) != it->npos)
 				{
@@ -191,6 +238,9 @@ book searchBookByID(string bookID)
 	std::ifstream in(filename);
 	Json::Value root;
 	Json::CharReaderBuilder rbuilder;
+	Json::StreamWriterBuilder wBuilder;
+	wBuilder.setDefaults(&root);
+	root["emitUTF8"] = true;
 	rbuilder["collectComments"] = false;
 	string errs;
 	Json::parseFromStream(rbuilder, in, &root, &errs);
@@ -198,14 +248,14 @@ book searchBookByID(string bookID)
 	if (root.isMember(bookID))
 	{
 		if (root[bookID]["status"] == invalid) {
-			std::cerr << "[ERROR]¸ÃÍ¼Êé²»¿ÉÓÃ£¬ÇëÈ·ÈÏÍ¼Êé×´Ì¬£¡\n";
+			std::cerr << "[ERROR]è¯¥å›¾ä¹¦ä¸å¯ç”¨ï¼Œè¯·ç¡®è®¤å›¾ä¹¦çŠ¶æ€ï¼\n";
 			return book();
 		}
 		return json2Book(root[bookID], bookID);
 	}
 	else
 	{
-		std::cerr << "[ERROR]Î´ÕÒµ½¶ÔÓ¦Í¼Êé£¬ÇëÈ·ÈÏbookID£¡\n";
+		std::cerr << "[ERROR]æœªæ‰¾åˆ°å¯¹åº”å›¾ä¹¦ï¼Œè¯·ç¡®è®¤bookIDï¼\n";
 		return book();
 	}
 }

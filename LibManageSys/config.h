@@ -1,22 +1,21 @@
+#pragma once
 #include <json/json.h>
 #include <fstream>
 #include <string>
 
 using std::string;
 
-//¸ÃheaderÖ»ĞèÒªÔÚĞèÒª¼ÓÔØÈ«¾ÖÉèÖÃµÄÎÄ¼şÖĞÒıÓÃ¼´¿É
+//è®¾ç½®å‚¨å­˜åœ¨"info\config.json"æ–‡ä»¶ä¸­ï¼Œè¯·ç›´æ¥ä¿®æ”¹é…ç½®jsonæ–‡ä»¶å®Œæˆä¿®æ”¹æ“ä½œ
 
-//ÉèÖÃ´¢´æÔÚ"info\config.json"ÎÄ¼şÖĞ£¬³ıÔÚ³ÌĞòÖĞĞŞ¸ÄÍâÒ²¿ÉÖ±½ÓĞŞ¸ÄÅäÖÃjsonÎÄ¼şÍê³ÉĞŞ¸Ä²Ù×÷
-
-struct Config
+static struct Config
 {
-	int maxBorrowTime;//µ¥´Î½èÔÄ×î³¤¿É½èÊ±¼ä£¨²»°üº¬Ğø½è£©
-	int renewTime;//µ¥´ÎĞø½èÑÓ³¤Ê±¼ä
-	int delayFineRatio;//ÖÍÄÉ½ğ·£¿î±¶ÂÊ£¨ÖÍÄÉ½ğ=·£¿î±¶ÂÊ*ÑÓÆÚ±¾Êı*ÑÓÆÚÊ±¼ä£¬µ¥Î»·Ö£©
-	int lostFineRatio;//Êé¼®¶ªÊ§·£¿î±¶ÂÊ£¨¶ªÊ§·£¿î=Êé¼®±ê¼Û*·£¿î±¶ÂÊ£¬µ¥Î»·Ö£©
+	int maxBorrowTime;//å•æ¬¡å€Ÿé˜…æœ€é•¿å¯å€Ÿæ—¶é—´ï¼ˆä¸åŒ…å«ç»­å€Ÿï¼‰
+	int renewTime;//å•æ¬¡ç»­å€Ÿå»¶é•¿æ—¶é—´
+	int delayFineRatio;//æ»çº³é‡‘ç½šæ¬¾å€ç‡ï¼ˆæ»çº³é‡‘=ç½šæ¬¾å€ç‡*å»¶æœŸæœ¬æ•°*å»¶æœŸæ—¶é—´ï¼Œå•ä½åˆ†ï¼‰
+	int lostFineRatio;//ä¹¦ç±ä¸¢å¤±ç½šæ¬¾å€ç‡ï¼ˆä¸¢å¤±ç½šæ¬¾=ä¹¦ç±æ ‡ä»·*ç½šæ¬¾å€ç‡ï¼Œå•ä½åˆ†ï¼‰
 } config;
 
-void loadConfig()
+static void loadConfig()
 {
 	string filename = "info\\config.json";
 	std::ifstream in(filename);
@@ -35,7 +34,7 @@ void loadConfig()
 	in.close();
 }
 
-void saveConfig(Config config)
+static void saveConfig(Config config)
 {
 	Json::Value root;
 	root["maxBorrowTime"] = Json::Value(config.maxBorrowTime);

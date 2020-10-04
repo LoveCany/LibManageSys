@@ -1,35 +1,42 @@
+#pragma once
 #include <string>
-#include <list>
+#include <vector>
 #include <json/json.h>
 
 using std::string;
-using std::list;
+using std::vector;
 
-enum bookStatus {
-	free = 1,
+enum bookStatus 
+{
+	available = 1,
 	borrowed = 2,
-	invalid = -1//ÏÂ¼ÜÏú»ÙµÈÒòËØµ¼ÖÂ²»¿É½è
+	invalid = -1//ä¸‹æ¶é”€æ¯ç­‰å› ç´ å¯¼è‡´ä¸å¯å€Ÿ
 };
 
 class book
 {
+	
 public:
-	string bookID;//bookIDÓ¦Ó³Éäµ½Ã¿Ò»±¾¶ÀÁ¢µÄÊé£¬¶ÔÓÚ¸´±¾bookID×ÔÈ»Ò²Ó¦²»Ò»ÖÂ£¨µ«Ô­ÔòÉÏÓ¦µ±ÏàÁÚ£©
+	string bookID;//bookIDåº”æ˜ å°„åˆ°æ¯ä¸€æœ¬ç‹¬ç«‹çš„ä¹¦ï¼Œå¯¹äºå¤æœ¬bookIDè‡ªç„¶ä¹Ÿåº”ä¸ä¸€è‡´ï¼ˆä½†åŸåˆ™ä¸Šåº”å½“ç›¸é‚»ï¼‰
 	string name;
 	string ISBN;
-	list<string> writer;
+	vector<string> writer;
 	string press;
-	int price;//µ¥Î»µ½·Ö£¬¼´10Ôª±íÊ¾Îª1000
-	bookStatus status;
-	/*ĞÂÔöÍ¼ÊéÓ¦µ±µ÷ÓÃaddBook()·½·¨£¬ÒÔ·½±ãmain·½·¨´¦ÀíÒì³£*/
-	book();//ÎŞĞ§²éÑ¯µÄ·µ»Ø½á¹û
-	book(string bookID, string name, string ISBN, list<string> writer, string press, int price);
-	book(string bookID, string name, string ISBN, list<string> writer, string press, int price, bookStatus status);
-	void deleteBook();//±¨·ÏÏú»Ù
+	int price;//å•ä½åˆ°åˆ†ï¼Œå³10å…ƒè¡¨ç¤ºä¸º1000
+	int bookStatus;
+	int borrowedTime;
+	/*æ–°å¢å›¾ä¹¦åº”å½“è°ƒç”¨addBook()æ–¹æ³•ï¼Œä»¥æ–¹ä¾¿mainæ–¹æ³•å¤„ç†å¼‚å¸¸*/
+	book();//æ— æ•ˆæŸ¥è¯¢çš„è¿”å›ç»“æœ
+	book(string bookID, string name, string ISBN, vector<string> writer, string press, int price);
+	book(string bookID, string name, string ISBN, vector<string> writer, string press, int price, int status, int borrowedTime);
+	void deleteBook();//æŠ¥åºŸé”€æ¯
 	void operator=(const book &B);
+	//åœ¨å®Œæˆå€Ÿä¹¦/è¿˜ä¹¦æ“ä½œåæ›´æ–°å›¾ä¹¦ä¿¡æ¯å¹¶ä¿å­˜åˆ°æ–‡ä»¶
+	void updateBookInfo();
 };
 
 book json2Book(Json::Value bookJSON, string bookID);
-list<book> searchBook(string word);
+vector<book> searchBook(string word);
 book searchBookByID(string bookID);
 bool addBook();
+

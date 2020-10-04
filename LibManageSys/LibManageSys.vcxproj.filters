@@ -27,7 +27,7 @@
     <ClCompile Include="borrowInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="analysis.cpp">
+    <ClCompile Include="analytics.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="config.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="analytics.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

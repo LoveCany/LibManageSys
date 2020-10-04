@@ -1,38 +1,49 @@
-#include <string>
-#include <list>
+#pragma once
+#ifndef USER_H
+
+#define USER_H
+#include "config.h"
 #include "borrowInfo.h"
+#include <string>
+#include <vector>
+
 #include "book.h"
 
+
+
+
 using std::string;
-using std::list;
+using std::vector;
 
 enum userType {
-	user = 1,//ÆÕÍ¨ÓÃ»§£¬¿ÉÒÔ½èÊé/»¹Êé/ÉêÇëĞøÆÚ/½ÉÄÉÖÍÄÉ½ğ/¼ö¹º/²é¿´¸öÈËÍ³¼Æ
-	admin = 2,//¹ÜÀíÔ±£¬¿ÉÒÔ½øĞĞ²É¹º/ÉêÇë±¨·Ï/ĞŞ¸Äµ¥´Î½èÊéÊ±³¤/ĞŞ¸ÄÖÍÄÉ½ğ½ğ¶î/²é¿´È«ÌåÍ³¼Æ
+	user = 1,//æ™®é€šç”¨æˆ·ï¼Œå¯ä»¥å€Ÿä¹¦/è¿˜ä¹¦/ç”³è¯·ç»­æœŸ/ç¼´çº³æ»çº³é‡‘/æŸ¥çœ‹ä¸ªäººç»Ÿè®¡
+	admin = 2,//ç®¡ç†å‘˜ï¼Œå¯ä»¥è¿›è¡Œé‡‡è´­/ç”³è¯·æŠ¥åºŸ/ä¿®æ”¹å•æ¬¡å€Ÿä¹¦æ—¶é•¿/ä¿®æ”¹æ»çº³é‡‘é‡‘é¢/æŸ¥çœ‹å…¨ä½“ç»Ÿè®¡
 	undefined = -1
 };
 
-string generateMD5(const string& src);//Éú³ÉMD5ÖµµÄ·½·¨
+string generateMD5(const string& src);//ç”ŸæˆMD5å€¼çš„æ–¹æ³•
 
 class User
 {
 	userType type;
-	string username;//ÓÃ»§Ãû£¬µÇÂ¼Ê±Ê¹ÓÃ£¬²»¿É¸ü¸Ä
-	string realName;//ÓÃ»§ĞÕÃû£¬ÖÕ¶ËÏÔÊ¾ÓÃ
-	string passwordMD5;//ÓÃ»§ÃÜÂë¼ÆËãMD5Öµºó´æ´¢ÓÃ×÷¼øÈ¨Ê±±È¶Ô£¬²»Ö±½ÓÃ÷ÎÄ´¢´æ
-	list<int> borrowing;//¼ÇÂ¼µ±Ç°½èÊéĞÅÏ¢¶ÔÓ¦ID
-	list<int> returned;//¼ÇÂ¼ÒÑ»¹ĞÅÏ¢¶ÔÓ¦ID
+	string realName;//ç”¨æˆ·å§“åï¼Œç»ˆç«¯æ˜¾ç¤ºç”¨
+	string passwordMD5;//ç”¨æˆ·å¯†ç è®¡ç®—MD5å€¼åå­˜å‚¨ç”¨ä½œé‰´æƒæ—¶æ¯”å¯¹ï¼Œä¸ç›´æ¥æ˜æ–‡å‚¨å­˜
 public:
+	string username;//ç”¨æˆ·åï¼Œç™»å½•æ—¶ä½¿ç”¨ï¼Œä¸å¯æ›´æ”¹
 	User();
 	User(string username,string passwordMD5);
 	User(userType type, string username, string realName, string password);
-	bool verifyPassword(string pw);//¼øÈ¨Ê±Ğ£ÑéÊäÈëÃÜÂëÊÇ·ñÓë×¢²áÊ±Ò»ÖÂ
-	bool modifyName(string newName);//ĞŞ¸ÄÕæÊµĞÕÃû
+	bool verifyPassword(string pw);//é‰´æƒæ—¶æ ¡éªŒè¾“å…¥å¯†ç æ˜¯å¦ä¸æ³¨å†Œæ—¶ä¸€è‡´
+	bool modifyName(string newName);//ä¿®æ”¹çœŸå®å§“å
 	bool modifyPassword(string pw);
-	list<int> borrowingInfo();
-	borrowInfo newBorrow();
-	list<int> returnedInfo();
-	borrowInfo newReturn();
+	vector<borrowInfo> borrowingInfo;
+	vector<borrowInfo> returnedInfo;
+	/*å€Ÿä¹¦ä¸è¿˜ä¹¦éƒ½åº”å½“é€æœ¬è¿›è¡Œ*/
+	borrowInfo newBorrow(book book);
+	borrowInfo newReturn(borrowInfo borrow);
 	userType getType();
+	/*å®Œæˆå€Ÿ/è¿˜ä¹¦ååŒæ—¶åŒæ­¥ä¿¡æ¯åˆ°æ–‡ä»¶*/
+	void updateInfo();
 };
 
+#endif // !USER_H

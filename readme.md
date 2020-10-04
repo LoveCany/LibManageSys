@@ -1,26 +1,62 @@
 # LibManageSys
 
-A Simple CPP Project
+## 操作环境
 
-## Environment
+IDE: Visual Studio 2019 Professional **(推荐使用，搭配vcpkg可快速完成导入第三方库)** 
 
-IDE: Visual Studio 2019 Professional **(Recommended)**
+包管理器: vcpkg
 
-## How to use
+Windows API: Windows 10 (Version 2004)
 
-1. Get **vcpkg** (https://github.com/microsoft/vcpkg)
+## 环境配置
+
+1. Visual Studio 2019的安装
+
+   Visual Studio从2017以后的安装完全依赖于安装器Visual Studio Installer，在官网 (https://visualstudio.microsoft.com/zh-hans/vs/)下载并执行安装即可。由于我拥有MSDN订阅，故这里使用的是专业版，该Project使用社区版亦可完成开发和编译调试。
+
+   启动安装器后，除必要依赖外，需额外安装C++相关组件以保证后续工作正常进行。
+
+2. vcpkg的安装
+
+   vcpkg目前托管在GitHub平台上 (仓库地址：https://github.com/microsoft/vcpkg)，按照安装文档中的说明完成安装，并集成在Visual Studio上的插件即可。
+
+3. 获取第三方库
+
+   由于上一步安装vcpkg时我已经将其加入环境变量，故以下命令都略去了目录寻址，如未加入环境变量请自行补全。
+
+   ``````
+   vcpkg install openssl
+   vcpkg install jsoncpp
+   ``````
+
+   openssl是一个开源的加密算法库，该project中用于登录时比对密码MD5值，免去了明文记录可能造成的风险；jsoncpp是C++语言中关于JSON格式进行构造和解析的库，由于在C++上进行对数据库 (SQLite等)进行读写较为不便，同时本着轻量化、通用和易读的原则，选用了JSON代为进行数据存储。
    
-**vcpkg** is a package manager designed for C++, and all imported packages of this project (OpenSSL and jsoncpp) are installed from it. So it is a easier way to get them without complicated settings.
+   需要格外注意的一点是，由于上述两个第三方仓库都搭建在海外且国内暂无公开的镜像源，访问速度极慢，建议自行寻找第三方镜像源或修改hosts等方法完成对代码的拉取。
+   
+   备注：尽管上述两个开源库通过vcpkg安装极慢，但可以尝试直接下载分发包解压到对应目录的办法，这里不做介绍。
 
-2. Install OpenSSL and jsoncpp
+## Project说明
 
-```
-vcpkg install jsoncpp
-vcpkg install openssl
-```
+### 项目结构
 
-notice that most of the sources are located outside China, so it may be very slow to fetch them. Try mirror sites or do something when the process seems to be stopped.
+本着面向对象设计的原则，共设计了三个类，分别为book、borrowInfo和User，分别代表馆藏书籍，单条借阅记录和读者/管理员。
 
-3. Clone the project and open it on Visual Studio
+同时该project设计在满足了基本功能的同时，也加入了自定义全局设置（面向管理员）的选项。设置参数存储在config.json文件中，可以自由进行配置。
 
-4. GLHF:)
+### 优点
+
+1. 使用JSON替代传统关系型数据库进行CRUD（增删查改）操作，轻量便携，同时给系统带来的负载量大大减少，并且文件简洁易读。
+2. 引入第三方库实现操作（密码校验，JSON格式的构造和解析等），避免了自己设计可能带来的格式不规范、Debug难等问题。
+
+### 不足
+
+1. 使用JSON是一个双刃剑，在带来轻量化的同时，其作为单文件的局限性也导致了其一旦规模增大必须整个读入内存，在部分极端场景下可能存在内存溢出的风险。
+2. 使用Visual Studio配合vcpkg轻松完成了对第三方库的引入，但由于Visual Studio本身对中文编写的文件编码支持不佳（默认Unicode而不是更为广泛使用的UTF-8），即使使用了扩展强制全局使用UTF-8后，中文字符串仍旧使用了Unicode编码，这导致了jsoncpp库无法读取中文字符，全部信息的录入必须使用英文完成。
+
+### 改进方向
+
+1. 如果执意使用JSON的话，其类JavaScript的语法设计导致了其难以分段读写。在不影响使用的情况下，可以将所有的书籍和借阅记录拆分成单文件分别存储，有需要时只需读取该对象对应的JSON文件即可，无需整个读入。
+
+   但这样的作法同样存在着问题：检索书籍和获取统计数据时需要对所有单文件进行遍历，而系统IO的耗时要远高于读内存，大量小文件的存在会严重影响效率。因此这条只作为改进建议，具体实施仍需要权衡利弊。
+
+2. 关于数据存储上，YAML格式可能会是比起JSON一个友好的替代选择，它相比JSON更为简介。而其在C++能够执行解析构造的开源第三方库yaml-cpp也同样可以通过vcpkg获取。但其比起背靠前端最常用语言JavaScript的JSON而言，通用度较低，且在网络通信中也不如JSON的解析构造来得更加简洁方便。

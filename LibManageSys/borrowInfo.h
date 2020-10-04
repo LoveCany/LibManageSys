@@ -1,4 +1,9 @@
+#pragma once
+#ifndef BORROWINFO_H
+#define BORROWINFO_H
+
 #include "book.h"
+
 #include <ctime>
 #include <string>
 
@@ -10,17 +15,34 @@ enum borrowStatus {
     lost=3
 };
 
-class borrowInfo :
-    public book
+struct fine
 {
-    borrowStatus status;
-    string borrowedBy;
-    tm borrowedTime;
-    tm dueTime;
-    bool isReturned;
-    tm returnedTime;
-    bool isRenewed;
-    bool isLost;//Èô½èÔÄÊé¼®¶ªÊ§£¬°´£¨Ô­¼Û*¹ÜÀíÔ±ÉèÖÃ±¶Êı£©Åâ³¥
-    int delayFine;//·£¿î¾«È·µ½·Ö£¬Ö»ÔÚÍê³É¹é»¹²Ù×÷Ê±¼ÆËã²¢¼ÓÈëÎÄ¼şÖĞ
+    int delayFine;
+    int lostFine;
+    int total;
 };
 
+class borrowInfo
+{
+public:
+    string bookID;
+    int borrowStatus;
+    string borrowedBy;
+    time_t borrowedTime;
+    time_t dueTime;
+    bool isReturned;
+    time_t returnedTime;
+    bool isRenewed;
+    bool isLost;//è‹¥å€Ÿé˜…ä¹¦ç±ä¸¢å¤±ï¼ŒæŒ‰ï¼ˆåŸä»·*ç®¡ç†å‘˜è®¾ç½®å€æ•°ï¼‰èµ”å¿
+    int fine;//ç½šæ¬¾ç²¾ç¡®åˆ°åˆ†ï¼Œåªåœ¨å®Œæˆå½’è¿˜æ“ä½œååŠ å…¥æ–‡ä»¶ä¸­
+
+    borrowInfo(string bookID, string username);
+    borrowInfo(string bookID, int borrowStatus, string borrowedBy, time_t borrowedTime,
+        time_t dueTime, bool isReturned, time_t returnedTime, bool isRenewed,
+        bool isLost, int fine);
+    /*è®¡ç®—å•æœ¬ç½šé‡‘ï¼ˆåŒ…å«å»¶æœŸæœªè¿˜å’Œä¸¢å¤±ä¸¤ç§æƒ…å½¢ï¼‰ï¼Œå•ä½ä¸ºäººæ°‘å¸åˆ†*/
+    struct fine calculateFine();
+};
+
+
+#endif // !BORROWINFO_H
